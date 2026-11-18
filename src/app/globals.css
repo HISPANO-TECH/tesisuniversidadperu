@@ -1,0 +1,509 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), Georgia, serif;
+  --font-academic: var(--font-academic-src), "Iowan Old Style", Georgia, serif;
+
+  /* Cian de la marca (logo TUP) */
+  --color-brand-50: #ecfeff;
+  --color-brand-100: #cff9fd;
+  --color-brand-200: #a3f1fa;
+  --color-brand-300: #63e5f4;
+  --color-brand-400: #1fd3e8;
+  --color-brand-500: #04c3d9;
+  --color-brand-600: #069bb3;
+  --color-brand-700: #0b7b91;
+  --color-brand-800: #126475;
+  --color-brand-900: #134f5d;
+
+  /* Tinta académica */
+  --color-ink-50: #f6f8fb;
+  --color-ink-100: #eceff5;
+  --color-ink-200: #d6dce7;
+  --color-ink-300: #aab4c6;
+  --color-ink-400: #7a879d;
+  --color-ink-500: #566279;
+  --color-ink-600: #3f4a5f;
+  --color-ink-700: #2c3548;
+  --color-ink-800: #1a2233;
+  --color-ink-900: #0d1422;
+  --color-ink-950: #070b14;
+
+  /* Dorado de toga/medalla */
+  --color-gold-300: #f0d77a;
+  --color-gold-400: #e5c14e;
+  --color-gold-500: #d4af37;
+  --color-gold-600: #b08d22;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+  --animate-spin-slow: spin 24s linear infinite;
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-shimmer: shimmer 2.8s linear infinite;
+  --animate-blob: blob 14s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes shimmer {
+    from { background-position: -200% 0; }
+    to { background-position: 200% 0; }
+  }
+  @keyframes blob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -40px) scale(1.08); }
+    66% { transform: translate(-25px, 20px) scale(0.95); }
+  }
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-padding-top: 96px;
+  /* Barra de scroll personalizada (Firefox) */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brand-500) var(--color-ink-50);
+}
+/* Sin Lenis (táctil / movimiento reducido) usamos scroll suave nativo */
+html:not(.lenis) {
+  scroll-behavior: smooth;
+}
+/* Reglas recomendadas por Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-ink-800);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- Scrollbar (Chrome, Edge, Safari) ---------- */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-ink-50);
+}
+::-webkit-scrollbar-thumb {
+  border: 3px solid var(--color-ink-50);
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--color-brand-400), var(--color-brand-700));
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--color-brand-500), var(--color-ink-900));
+}
+
+/* ---------- Texto seleccionado (sombreado) ---------- */
+::selection {
+  background: var(--color-brand-500);
+  color: #ffffff;
+  text-shadow: 0 1px 0 color-mix(in oklab, var(--color-brand-700) 60%, transparent);
+}
+.bg-ink-950 ::selection,
+.bg-ink-900 ::selection {
+  background: var(--color-gold-400);
+  color: var(--color-ink-950);
+  text-shadow: none;
+}
+
+/* ---------- Sombras por niveles ---------- */
+@utility shadow-soft {
+  box-shadow:
+    0 1px 2px rgb(13 20 34 / 0.04),
+    0 8px 24px -12px rgb(13 20 34 / 0.12);
+}
+@utility shadow-lift {
+  box-shadow:
+    0 2px 4px rgb(13 20 34 / 0.04),
+    0 18px 40px -18px rgb(13 20 34 / 0.22),
+    0 40px 80px -40px color-mix(in oklab, var(--color-brand-600) 28%, transparent);
+}
+@utility shadow-glow {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--color-brand-400) 25%, transparent),
+    0 20px 50px -20px color-mix(in oklab, var(--color-brand-500) 55%, transparent);
+}
+
+/* Tarjetas: elevación suave que crece al pasar el mouse */
+@utility card-lift {
+  box-shadow:
+    0 1px 2px rgb(13 20 34 / 0.04),
+    0 8px 24px -14px rgb(13 20 34 / 0.14);
+  transition:
+    translate 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+  &:hover {
+    translate: 0 -6px;
+    box-shadow:
+      0 2px 4px rgb(13 20 34 / 0.04),
+      0 22px 44px -18px rgb(13 20 34 / 0.24),
+      0 34px 70px -34px color-mix(in oklab, var(--color-brand-600) 45%, transparent);
+  }
+}
+
+/* Secciones fuera de pantalla: el navegador omite su render hasta acercarse */
+@utility cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+/* ---------- Utilidades de marca ---------- */
+@utility text-gradient {
+  background-image: linear-gradient(100deg, var(--color-brand-500), var(--color-brand-700) 45%, var(--color-gold-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(13 20 34 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(13 20 34 / 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+@utility bg-grid-dark {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+@utility container-x {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 40rem) { padding-inline: 1.5rem; }
+  @media (width >= 64rem) { padding-inline: 2rem; }
+}
+
+/* ---------- Animaciones de aparición al hacer scroll ----------
+   Aquí solo se define el estado OCULTO inicial. La animación hacia visible la
+   ejecuta RevealObserver con la Web Animations API (sin tocar clases ni
+   atributos del HTML, para no provocar "hydration mismatch" en React).
+   Variantes: .reveal (sube), .reveal-left, .reveal-right, .reveal-zoom.
+   .reveal-stagger escalona automáticamente a sus hijos directos. */
+.reveal,
+.reveal-left,
+.reveal-right,
+.reveal-zoom,
+.reveal-stagger > * {
+  opacity: 0;
+  /* Transiciones solo para el hover (inmediatas, independientes de la aparición) */
+  transition:
+    translate 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    scale 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s ease,
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+}
+.reveal { transform: translate3d(0, 36px, 0); }
+.reveal-left { transform: translate3d(-48px, 0, 0); }
+.reveal-right { transform: translate3d(48px, 0, 0); }
+.reveal-zoom { transform: scale(0.92); }
+.reveal-stagger > * { transform: translate3d(0, 30px, 0) scale(0.98); }
+
+/* Sin JavaScript todo debe verse */
+.no-js .reveal,
+.no-js .reveal-left,
+.no-js .reveal-right,
+.no-js .reveal-zoom,
+.no-js .reveal-stagger > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Entrada del hero: CSS puro, no espera a JavaScript (mejor LCP) ---------- */
+.enter {
+  animation: enter 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--enter-delay, 0ms);
+}
+@keyframes enter {
+  from { opacity: 0; transform: translate3d(0, 24px, 0); }
+  to { opacity: 1; transform: none; }
+}
+.enter-zoom {
+  animation: enterZoom 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--enter-delay, 0ms);
+}
+@keyframes enterZoom {
+  from { opacity: 0; transform: scale(0.94) translate3d(0, 16px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Animaciones en bucle de [data-anim]: RevealObserver las pausa fuera de pantalla
+   con getAnimations() (sin modificar el HTML). */
+
+/* ---------- Diseño ligado al scroll (CSS scroll-driven, sin JavaScript) ---------- */
+.scroll-progress {
+  display: none;
+}
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    display: block;
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 60;
+    height: 3px;
+    transform-origin: 0 50%;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-brand-600), var(--color-gold-500));
+    box-shadow: 0 0 12px color-mix(in oklab, var(--color-brand-500) 60%, transparent);
+    animation: progressGrow linear both;
+    animation-timeline: scroll(root block);
+  }
+  @keyframes progressGrow {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  /* Botón "volver arriba": aparece al bajar y su anillo marca el avance */
+  .to-top {
+    animation: toTopShow linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 600px;
+  }
+  @keyframes toTopShow {
+    from { opacity: 0; transform: translateY(16px) scale(0.8); pointer-events: none; }
+    to { opacity: 1; transform: none; pointer-events: auto; }
+  }
+  .to-top-ring {
+    animation: ringFill linear both;
+    animation-timeline: scroll(root block);
+  }
+  @keyframes ringFill {
+    from { stroke-dashoffset: 126; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* Imágenes: zoom suave y parallax al entrar en pantalla */
+  .scroll-zoom {
+    animation: scrollZoom linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 60%;
+  }
+  @keyframes scrollZoom {
+    from { transform: scale(1.12); }
+    to { transform: scale(1); }
+  }
+  .scroll-parallax {
+    animation: scrollParallax linear both;
+    animation-timeline: view();
+  }
+  @keyframes scrollParallax {
+    from { transform: translate3d(0, 40px, 0); }
+    to { transform: translate3d(0, -40px, 0); }
+  }
+}
+@supports not (animation-timeline: scroll()) {
+  .to-top { opacity: 1; }
+}
+
+/* ---------- Trazos SVG animados ---------- */
+.draw {
+  stroke-dasharray: var(--len, 600);
+  stroke-dashoffset: var(--len, 600);
+  animation: draw 2.4s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  animation-delay: var(--d, 0s);
+}
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+.draw-to {
+  stroke-dasharray: var(--len, 600);
+  stroke-dashoffset: var(--len, 600);
+  animation: drawTo 2.2s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  animation-delay: var(--d, 0s);
+}
+@keyframes drawTo {
+  to { stroke-dashoffset: var(--to, 0); }
+}
+
+.grow-y {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: growY 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--d, 0s);
+}
+@keyframes growY {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+.pop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: var(--d, 0s);
+}
+@keyframes pop {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.bob {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bob 5s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(-2deg); }
+}
+
+.pulse-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulseRing 2.6s ease-out infinite;
+  animation-delay: var(--d, 0s);
+}
+@keyframes pulseRing {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.dash-flow {
+  stroke-dasharray: 6 10;
+  animation: dashFlow 1.6s linear infinite;
+}
+@keyframes dashFlow {
+  to { stroke-dashoffset: -32; }
+}
+
+.typing-line {
+  transform-box: fill-box;
+  transform-origin: left;
+  animation: typing 5s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+@keyframes typing {
+  0% { transform: scaleX(0); }
+  30%, 85% { transform: scaleX(1); }
+  100% { transform: scaleX(0); opacity: 0; }
+}
+
+/* ---------- Acordeón FAQ ---------- */
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details[open] .faq-icon { transform: rotate(45deg); }
+details[open] { box-shadow: 0 1px 2px rgb(13 20 34 / 0.04), 0 24px 50px -28px color-mix(in oklab, var(--color-brand-600) 50%, transparent); border-color: var(--color-brand-200); }
+
+/* Apertura suave del acordeón (Chrome/Edge 131+; en otros abre al instante) */
+:root { interpolate-size: allow-keywords; }
+details::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition: block-size 0.45s cubic-bezier(0.22, 1, 0.36, 1), content-visibility 0.45s allow-discrete;
+}
+details[open]::details-content { block-size: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal, .reveal-left, .reveal-right, .reveal-zoom, .reveal-stagger > * { opacity: 1; transform: none; }
+  .draw { stroke-dashoffset: 0; }
+  .scroll-zoom, .scroll-parallax { animation: none !important; }
+}
+
+/* =====================================================================
+   Estilo académico (páginas de universidades) — inspirado en la estética
+   editorial de Harvard / Stanford: serif clásica, versalitas, filetes
+   finos, capitulares y papel marfil. Se activa con la clase .academic.
+   ===================================================================== */
+.academic h1,
+.academic h2,
+.academic h3 {
+  font-family: var(--font-academic);
+  font-weight: 650;
+  letter-spacing: -0.012em;
+}
+.academic h1 { font-weight: 700; }
+
+/* Eyebrow: de "píldora" a versalitas entre filetes */
+.academic [data-eyebrow] {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0;
+  gap: 0.85rem;
+  font-family: var(--font-academic);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  color: var(--color-brand-600);
+}
+.academic .bg-ink-950 [data-eyebrow],
+.academic [data-tone="dark"] [data-eyebrow] {
+  color: var(--color-gold-400);
+}
+.academic [data-eyebrow] > span { display: none; }
+.academic [data-eyebrow]::before,
+.academic [data-eyebrow]::after {
+  content: "";
+  width: 2.25rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+.academic .text-left [data-eyebrow]::before,
+.academic [data-align="left"] [data-eyebrow]::before { display: none; }
+
+/* Capitular (drop cap) */
+.dropcap::first-letter {
+  float: left;
+  margin: 0.32rem 0.6rem 0 0;
+  font-family: var(--font-academic);
+  font-size: 4.1em;
+  font-weight: 700;
+  line-height: 0.72;
+  color: var(--color-brand-600);
+}
+
+/* Citas en serif cursiva */
+.academic blockquote {
+  font-family: var(--font-academic);
+  font-style: italic;
+  font-size: 1.06rem;
+  line-height: 1.65;
+}
+
+/* Filete doble clásico */
+@utility rule-double {
+  height: 5px;
+  border-top: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+}
+
+/* Textura de papel muy sutil (sin imágenes) */
+@utility bg-paper {
+  background-color: var(--color-ink-50);
+  background-image:
+    radial-gradient(color-mix(in oklab, var(--color-ink-900) 4%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
